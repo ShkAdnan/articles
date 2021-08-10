@@ -1,6 +1,11 @@
 <template>
     <div>
         <h2>Articles</h2>
+
+         <div class="form-group">
+            <input type="text" class="form-control"  v-model="search" placeholder="Search">
+        </div>
+
         <nav aria-label="Page navigation example">
             <ul class="pagination">
                 <li v-bind:class="[{ disabled: !pagination.prev_page_url }]" class="page-item">
@@ -16,8 +21,8 @@
                 </li>
             </ul>
         </nav>
-        <div class="card card-body" v-for="article in articles" :key="article.id">
-            <h3>{{ article.title}}</h3>
+        <div class="card card-body" v-for="article in filterArticles" :key="article.id">
+            <h3>{{ article.title }}</h3>
             <p> {{ article.body }}</p>
         </div>
     </div>
@@ -36,14 +41,15 @@ export default({
             },
             article_id : '',
             pagination : {},
-            edit       : false
+            edit       : false,
+            search     : ''
         }
     },
     created(){
         this.fetchArticle();
     },
     methods : {
-
+        
         fetchArticle(page_url){
             let vm = this;
             page_url = page_url || 'api/articles'
@@ -65,6 +71,13 @@ export default({
             }
 
             this.pagination = pagination;
+        }
+    },
+    computed : {
+        filterArticles : function() {
+            return this.articles.filter( ( article ) => {
+                return article.title.match( this.search );
+            } )
         }
     }
 })

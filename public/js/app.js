@@ -1870,6 +1870,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -1881,7 +1886,8 @@ __webpack_require__.r(__webpack_exports__);
       },
       article_id: '',
       pagination: {},
-      edit: false
+      edit: false,
+      search: ''
     };
   },
   created: function created() {
@@ -1910,6 +1916,15 @@ __webpack_require__.r(__webpack_exports__);
         prev_page_url: links.prev
       };
       this.pagination = pagination;
+    }
+  },
+  computed: {
+    filterArticles: function filterArticles() {
+      var _this2 = this;
+
+      return this.articles.filter(function (article) {
+        return article.title.match(_this2.search);
+      });
     }
   }
 });
@@ -30506,6 +30521,30 @@ var render = function() {
     [
       _c("h2", [_vm._v("Articles")]),
       _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.search,
+              expression: "search"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { type: "text", placeholder: "Search" },
+          domProps: { value: _vm.search },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.search = $event.target.value
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
       _c("nav", { attrs: { "aria-label": "Page navigation example" } }, [
         _c("ul", { staticClass: "pagination" }, [
           _c(
@@ -30570,7 +30609,7 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _vm._l(_vm.articles, function(article) {
+      _vm._l(_vm.filterArticles, function(article) {
         return _c("div", { key: article.id, staticClass: "card card-body" }, [
           _c("h3", [_vm._v(_vm._s(article.title))]),
           _vm._v(" "),
